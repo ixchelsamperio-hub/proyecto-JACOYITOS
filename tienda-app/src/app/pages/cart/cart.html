@@ -1,0 +1,66 @@
+<div class="cart-page">
+  <div class="container">
+    <h1>🛒 Mi Carrito</h1>
+
+    @if (ordered()) {
+      <div class="success-state">
+        <span class="success-icon">🎉</span>
+        <h2>¡Pedido realizado con éxito!</h2>
+        <p>Gracias por tu compra, {{ auth.currentUser()?.name }}. Pronto recibirás tus productos frescos. 🌿</p>
+        <a routerLink="/" class="continue-btn">Seguir comprando</a>
+      </div>
+    } @else if (cartService.items().length === 0) {
+      <div class="empty-state">
+        <span class="empty-icon">🛒</span>
+        <h2>Tu carrito está vacío</h2>
+        <p>Agrega frutas, verduras y más desde nuestra tienda</p>
+        <a routerLink="/" class="continue-btn">Ver productos</a>
+      </div>
+    } @else {
+      <div class="cart-layout">
+        <div class="cart-items">
+          @for (item of cartService.items(); track item.product.id) {
+            <div class="cart-item">
+              <div class="item-emoji">{{ item.product.image }}</div>
+              <div class="item-info">
+                <h3>{{ item.product.name }}</h3>
+                <span class="item-meta">{{ item.product.category }} · {{ item.product.unit }}</span>
+              </div>
+              <div class="item-qty">
+                <label>Cantidad</label>
+                <input type="number" [value]="item.quantity" min="1" [max]="item.product.stock"
+                       (change)="updateQty(item.product.id, $event)" />
+              </div>
+              <div class="item-price">
+                <span class="unit-price">${{ item.product.price | number:'1.0-0' }} c/u</span>
+                <span class="total-price">${{ item.product.price * item.quantity | number:'1.0-0' }}</span>
+              </div>
+              <button class="remove-btn" (click)="cartService.remove(item.product.id)">✕</button>
+            </div>
+          }
+        </div>
+
+        <div class="cart-summary">
+          <h2>Resumen del pedido</h2>
+          <div class="summary-rows">
+            @for (item of cartService.items(); track item.product.id) {
+              <div class="summary-row">
+                <span>{{ item.product.name }} ×{{ item.quantity }}</span>
+                <span>${{ item.product.price * item.quantity | number:'1.0-0' }}</span>
+              </div>
+            }
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-total">
+            <span>Total</span>
+            <span class="total-amount">${{ cartService.total() | number:'1.0-0' }}</span>
+          </div>
+          <button class="checkout-btn" (click)="checkout()">
+            💳 Confirmar Pedido
+          </button>
+          <a routerLink="/" class="keep-shopping">← Seguir comprando</a>
+        </div>
+      </div>
+    }
+  </div>
+</div>

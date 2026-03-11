@@ -1,0 +1,79 @@
+<div class="home">
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-content">
+     
+      <h1>Tu mercado <span class="highlight">fresco y natural</span></h1>
+      <p>Frutas, verduras, lácteos y más — directo a tu puerta</p>
+      <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="Buscar productos frescos..." (input)="onSearch($event)" />
+      </div>
+    </div>
+    
+  </section>
+
+  <!-- Categorías -->
+  <section class="categories">
+    <div class="container">
+      @for (cat of categories(); track cat) {
+        <button class="cat-btn" [class.active]="selectedCategory() === cat" (click)="setCategory(cat)">
+          {{ categoryIcon(cat) }} {{ cat }}
+        </button>
+      }
+    </div>
+  </section>
+
+  <!-- Productos -->
+  <section class="products-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>{{ selectedCategory() === 'Todas' ? '🛒 Todos los productos' : categoryIcon(selectedCategory()) + ' ' + selectedCategory() }}</h2>
+        <span class="count">{{ filteredProducts().length }} productos</span>
+      </div>
+
+      @if (filteredProducts().length === 0) {
+        <div class="empty-state">
+          <p>😕 No se encontraron productos</p>
+        </div>
+      }
+
+      <div class="products-grid">
+        @for (product of filteredProducts(); track product.id) {
+          <div class="product-card">
+            <a [routerLink]="['/product', product.id]" class="card-link">
+              <div class="product-image">
+                <span class="emoji">{{ product.image }}</span>
+                @if (product.stock <= 5) {
+                  <span class="low-stock">¡Últimas {{ product.stock }}!</span>
+                }
+              </div>
+              <div class="product-info">
+                <span class="category-tag">{{ product.category }}</span>
+                <h3>{{ product.name }}</h3>
+                <p class="description">{{ product.description }}</p>
+                <div class="rating">
+                  <span class="stars">{{ stars(product.rating) }}</span>
+                  <span class="rating-num">{{ product.rating }}</span>
+                </div>
+              </div>
+            </a>
+            <div class="card-footer">
+              <div class="price-block">
+                <span class="price">${{ product.price | number:'1.0-0' }}</span>
+                <span class="unit">/ {{ product.unit }}</span>
+              </div>
+              @if (auth.isLoggedIn() && !auth.isAdmin()) {
+                <button class="add-btn" [class.added]="isAdded(product.id)" (click)="addToCart(product)">
+                  {{ isAdded(product.id) ? '✓' : '+' }}
+                </button>
+              } @else if (!auth.isLoggedIn()) {
+                <a routerLink="/login" class="login-to-buy">Inicia sesión</a>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+</div>
