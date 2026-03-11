@@ -19,7 +19,7 @@
           </div>
           <p class="description">{{ p.description }}</p>
           <div class="stock-info">
-            <span>📦 {{ p.stock }} unidades disponibles</span>
+            <span>{{ p.stock }} unidades disponibles</span>
           </div>
           <div class="price-section">
             <span class="price">${{ p.price | number:'1.0-0' }}</span>
@@ -38,7 +38,7 @@
       </div>
     } @else {
       <div class="not-found">
-        <p>😕 Producto no encontrado</p>
+        <p>Producto no encontrado</p>
         <a routerLink="/">Volver al inicio</a>
       </div>
     }

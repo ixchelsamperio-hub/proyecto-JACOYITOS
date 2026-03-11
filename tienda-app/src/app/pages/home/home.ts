@@ -48,9 +48,9 @@ export class Home {
 
   categoryIcon(cat: string): string {
     const icons: Record<string, string> = {
-      'Frutas': '🍎', 'Verduras': '🥦', 'Lácteos': '🥛',
-      'Panadería': '🍞', 'Carnes': '🥩', 'Bebidas': '🧃', 'Todas': '🛒'
+      'Frutas': '', 'Verduras': '', 'Lácteos': '',
+      'Panadería': '', 'Carnes': '', 'Bebidas': '', 'Todas': ''
     };
-    return icons[cat] || '🛒';
+    return icons[cat] || '';
   }
 }

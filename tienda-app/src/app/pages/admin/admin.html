@@ -2,8 +2,8 @@
   <div class="admin-sidebar">
     <div class="sidebar-logo">🌿 Jacoyitos</div>
     <nav class="sidebar-nav">
-      <button [class.active]="view() === 'dashboard'" (click)="view.set('dashboard')">📊 Dashboard</button>
-      <button [class.active]="view() === 'products' || view() === 'form'" (click)="view.set('products')">📦 Inventario</button>
+      <button [class.active]="view() === 'dashboard'" (click)="view.set('dashboard')"> Dashboard</button>
+      <button [class.active]="view() === 'products' || view() === 'form'" (click)="view.set('products')">Inventario</button>
     </nav>
     <a routerLink="/" class="sidebar-back">← Ver Tienda</a>
   </div>
@@ -12,33 +12,29 @@
     @if (view() === 'dashboard') {
       <div class="dashboard">
         <h1>Panel de Administración</h1>
-        <p class="subtitle">Bienvenido, {{ auth.currentUser()?.name }} 👋</p>
+        <p class="subtitle">Bienvenido, {{ auth.currentUser()?.name }} </p>
         <div class="stats-grid">
 
 
           <div class="stat-card ">
-            <span class="stat-icon">📦</span>
             <div class="stat-info">
               <span class="stat-value">{{ ps.products().length }}</span>
               <span class="stat-label">Productos</span>
             </div>
           </div>
           <div class="stat-card ">
-            <span class="stat-icon">🏷️</span>
             <div class="stat-info">
               <span class="stat-value">{{ ps.getCategories().length }}</span>
               <span class="stat-label">Categorías</span>
             </div>
           </div>
           <div class="stat-card ">
-            <span class="stat-icon">⚠️</span>
             <div class="stat-info">
               <span class="stat-value">{{ lowStockCount() }}</span>
               <span class="stat-label">Stock Bajo</span>
             </div>
           </div>
           <div class="stat-card ">
-            <span class="stat-icon">💰</span>
             <div class="stat-info">
               <span class="stat-value">${{ totalValue() | number:'1.0-0' }}</span>
               <span class="stat-label">Valor Inventario</span>
@@ -81,8 +77,8 @@
               <span class="t-price">${{ p.price | number:'1.0-0' }} / {{ p.unit }}</span>
               <span class="t-stock" [class.low]="p.stock <= 5">{{ p.stock }}</span>
               <span class="t-actions">
-                <button class="edit-btn" (click)="openEdit(p)">✏️ Editar</button>
-                <button class="del-btn" (click)="confirmDelete(p.id)">🗑️</button>
+                <button class="edit-btn" (click)="openEdit(p)"> Editar</button>
+                <button class="del-btn" (click)="confirmDelete(p.id)">Eliminar</button>
               </span>
             </div>
           }
@@ -136,7 +132,7 @@
         </div>
         <div class="form-actions">
           <button class="cancel-btn" (click)="view.set('products')">Cancelar</button>
-          <button class="save-btn" (click)="save()">{{ editingProduct() ? '💾 Guardar Cambios' : '➕ Agregar Producto' }}</button>
+          <button class="save-btn" (click)="save()">{{ editingProduct() ? ' Guardar Cambios' : ' Agregar Producto' }}</button>
         </div>
       </div>
     }
@@ -145,7 +141,7 @@
   @if (deleteConfirmId()) {
     <div class="modal-overlay" (click)="cancelDelete()">
       <div class="modal" (click)="$event.stopPropagation()">
-        <span class="modal-icon">🗑️</span>
+        <span class="modal-icon"></span>
         <h3>¿Eliminar producto?</h3>
         <p>Esta acción no se puede deshacer.</p>
         <div class="modal-actions">

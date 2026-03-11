@@ -4,7 +4,7 @@
 
     @if (ordered()) {
       <div class="success-state">
-        <span class="success-icon">🎉</span>
+        <span class="success-icon"></span>
         <h2>¡Pedido realizado con éxito!</h2>
         <p>Gracias por tu compra, {{ auth.currentUser()?.name }}. Pronto recibirás tus productos frescos. 🌿</p>
         <a routerLink="/" class="continue-btn">Seguir comprando</a>
@@ -56,7 +56,7 @@
             <span class="total-amount">${{ cartService.total() | number:'1.0-0' }}</span>
           </div>
           <button class="checkout-btn" (click)="checkout()">
-            💳 Confirmar Pedido
+             Confirmar Pedido
           </button>
           <a routerLink="/" class="keep-shopping">← Seguir comprando</a>
         </div>

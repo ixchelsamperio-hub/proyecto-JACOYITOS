@@ -6,14 +6,12 @@
       <h1>Tu mercado <span class="highlight">fresco y natural</span></h1>
       <p>Frutas, verduras, lácteos y más — directo a tu puerta</p>
       <div class="search-bar">
-        <span class="search-icon">🔍</span>
         <input type="text" placeholder="Buscar productos frescos..." (input)="onSearch($event)" />
       </div>
     </div>
     
   </section>
 
-  <!-- Categorías -->
   <section class="categories">
     <div class="container">
       @for (cat of categories(); track cat) {
@@ -23,18 +21,16 @@
       }
     </div>
   </section>
-
-  <!-- Productos -->
   <section class="products-section">
     <div class="container">
       <div class="section-header">
-        <h2>{{ selectedCategory() === 'Todas' ? '🛒 Todos los productos' : categoryIcon(selectedCategory()) + ' ' + selectedCategory() }}</h2>
+        <h2>{{ selectedCategory() === 'Todas' ? ' Todos los productos' : categoryIcon(selectedCategory()) + ' ' + selectedCategory() }}</h2>
         <span class="count">{{ filteredProducts().length }} productos</span>
       </div>
 
       @if (filteredProducts().length === 0) {
         <div class="empty-state">
-          <p>😕 No se encontraron productos</p>
+          <p>No se encontraron productos</p>
         </div>
       }
 
