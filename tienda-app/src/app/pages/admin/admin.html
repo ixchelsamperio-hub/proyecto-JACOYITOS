@@ -1,0 +1,158 @@
+<div class="admin-page">
+  <div class="admin-sidebar">
+    <div class="sidebar-logo">🌿 Jacoyitos</div>
+    <nav class="sidebar-nav">
+      <button [class.active]="view() === 'dashboard'" (click)="view.set('dashboard')">📊 Dashboard</button>
+      <button [class.active]="view() === 'products' || view() === 'form'" (click)="view.set('products')">📦 Inventario</button>
+    </nav>
+    <a routerLink="/" class="sidebar-back">← Ver Tienda</a>
+  </div>
+
+  <div class="admin-content">
+    @if (view() === 'dashboard') {
+      <div class="dashboard">
+        <h1>Panel de Administración</h1>
+        <p class="subtitle">Bienvenido, {{ auth.currentUser()?.name }} 👋</p>
+        <div class="stats-grid">
+
+
+          <div class="stat-card ">
+            <span class="stat-icon">📦</span>
+            <div class="stat-info">
+              <span class="stat-value">{{ ps.products().length }}</span>
+              <span class="stat-label">Productos</span>
+            </div>
+          </div>
+          <div class="stat-card ">
+            <span class="stat-icon">🏷️</span>
+            <div class="stat-info">
+              <span class="stat-value">{{ ps.getCategories().length }}</span>
+              <span class="stat-label">Categorías</span>
+            </div>
+          </div>
+          <div class="stat-card ">
+            <span class="stat-icon">⚠️</span>
+            <div class="stat-info">
+              <span class="stat-value">{{ lowStockCount() }}</span>
+              <span class="stat-label">Stock Bajo</span>
+            </div>
+          </div>
+          <div class="stat-card ">
+            <span class="stat-icon">💰</span>
+            <div class="stat-info">
+              <span class="stat-value">${{ totalValue() | number:'1.0-0' }}</span>
+              <span class="stat-label">Valor Inventario</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="recent-products">
+          <div class="section-head">
+            <h2>Inventario Reciente</h2>
+            <button class="action-btn" (click)="view.set('products')">Ver todos →</button>
+          </div>
+          @for (p of ps.products().slice(0,5); track p.id) {
+            <div class="product-row">
+              <span class="p-emoji">{{ p.image }}</span>
+              <span class="p-name">{{ p.name }}</span>
+              <span class="p-cat">{{ p.category }}</span>
+              <span class="p-price">${{ p.price | number:'1.0-0' }} / {{ p.unit }}</span>
+              <span class="p-stock" [class.low]="p.stock <= 5">{{ p.stock }} uds</span>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    @if (view() === 'products') {
+      <div class="products-panel">
+        <div class="panel-header">
+          <h1>Gestión de Inventario</h1>
+          <button class="add-btn" (click)="openAdd()">+ Nuevo Producto</button>
+        </div>
+        <div class="products-table">
+          <div class="table-head">
+            <span>Producto</span><span>Categoría</span><span>Precio</span><span>Stock</span><span>Acciones</span>
+          </div>
+          @for (p of ps.products(); track p.id) {
+            <div class="table-row">
+              <span class="t-product"><span class="t-emoji">{{ p.image }}</span> {{ p.name }}</span>
+              <span class="t-cat">{{ p.category }}</span>
+              <span class="t-price">${{ p.price | number:'1.0-0' }} / {{ p.unit }}</span>
+              <span class="t-stock" [class.low]="p.stock <= 5">{{ p.stock }}</span>
+              <span class="t-actions">
+                <button class="edit-btn" (click)="openEdit(p)">✏️ Editar</button>
+                <button class="del-btn" (click)="confirmDelete(p.id)">🗑️</button>
+              </span>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    @if (view() === 'form') {
+      <div class="form-panel">
+        <div class="panel-header">
+          <h1>{{ editingProduct() ? 'Editar Producto' : 'Nuevo Producto' }}</h1>
+          <button class="back-btn" (click)="view.set('products')">← Volver</button>
+        </div>
+        <div class="form-grid">
+          <div class="field full">
+            <label>Nombre del producto *</label>
+            <input [(ngModel)]="form.name" placeholder="Ej: Manzanas Fuji" />
+          </div>
+          <div class="field">
+            <label>Precio (MXN) *</label>
+            <input type="number" [(ngModel)]="form.price" placeholder="0" />
+          </div>
+          <div class="field">
+            <label>Categoría *</label>
+            <input [(ngModel)]="form.category" placeholder="Ej: Frutas" />
+          </div>
+          <div class="field">
+            <label>Unidad de medida</label>
+            <input [(ngModel)]="form.unit" placeholder="Ej: kg, pieza, litro" />
+          </div>
+          <div class="field">
+            <label>Stock disponible *</label>
+            <input type="number" [(ngModel)]="form.stock" placeholder="0" />
+          </div>
+          <div class="field">
+            <label>Calificación (1-5)</label>
+            <input type="number" [(ngModel)]="form.rating" min="1" max="5" step="0.1" />
+          </div>
+          <div class="field full">
+            <label>Descripción</label>
+            <textarea [(ngModel)]="form.description" placeholder="Describe el producto..." rows="3"></textarea>
+          </div>
+          <div class="field full">
+            <label>Ícono del producto</label>
+            <div class="emoji-picker">
+              @for (e of emojis; track e) {
+                <button class="emoji-btn" [class.selected]="form.image === e" (click)="form.image = e">{{ e }}</button>
+              }
+            </div>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="cancel-btn" (click)="view.set('products')">Cancelar</button>
+          <button class="save-btn" (click)="save()">{{ editingProduct() ? '💾 Guardar Cambios' : '➕ Agregar Producto' }}</button>
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (deleteConfirmId()) {
+    <div class="modal-overlay" (click)="cancelDelete()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <span class="modal-icon">🗑️</span>
+        <h3>¿Eliminar producto?</h3>
+        <p>Esta acción no se puede deshacer.</p>
+        <div class="modal-actions">
+          <button (click)="cancelDelete()">Cancelar</button>
+          <button class="confirm-del" (click)="doDelete()">Sí, eliminar</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>
