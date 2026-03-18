@@ -1,66 +1,100 @@
-<div class="cart-page">
-  <div class="container">
-    <h1>🛒 Mi Carrito</h1>
+<div class="container py-4">
+  <h2 class="fw-bold mb-4">🛒 Mi Carrito</h2>
 
-    @if (ordered()) {
-      <div class="success-state">
-        <span class="success-icon"></span>
-        <h2>¡Pedido realizado con éxito!</h2>
-        <p>Gracias por tu compra, {{ auth.currentUser()?.name }}. Pronto recibirás tus productos frescos. 🌿</p>
-        <a routerLink="/" class="continue-btn">Seguir comprando</a>
-      </div>
-    } @else if (cartService.items().length === 0) {
-      <div class="empty-state">
-        <span class="empty-icon">🛒</span>
-        <h2>Tu carrito está vacío</h2>
-        <p>Agrega frutas, verduras y más desde nuestra tienda</p>
-        <a routerLink="/" class="continue-btn">Ver productos</a>
-      </div>
-    } @else {
-      <div class="cart-layout">
-        <div class="cart-items">
-          @for (item of cartService.items(); track item.product.id) {
-            <div class="cart-item">
-              <div class="item-emoji">{{ item.product.image }}</div>
-              <div class="item-info">
-                <h3>{{ item.product.name }}</h3>
-                <span class="item-meta">{{ item.product.category }} · {{ item.product.unit }}</span>
+  @if (ordered()) {
+    <div class="card border-success text-center p-5">
+      <div style="font-size:4rem">🎉</div>
+      <h3 class="mt-3 text-success">¡Pedido realizado con éxito!</h3>
+      <p class="text-muted">Gracias por tu compra, <strong>{{ auth.currentUser()?.name }}</strong>.</p>
+      <p class="text-success fw-bold">🚚 Tu pedido se mandará en un momento a tu dirección.</p>
+      <p class="text-muted small">📍 {{ auth.currentUser()?.address }}</p>
+      <a routerLink="/" class="btn btn-success mt-2 d-inline-block mx-auto" style="width:fit-content">Seguir comprando</a>
+    </div>
+
+  } @else if (cartService.items().length === 0) {
+    <div class="card text-center p-5">
+      <div style="font-size:4rem">🛒</div>
+      <h4 class="mt-3">Tu carrito está vacío</h4>
+      <p class="text-muted">Agrega frutas, verduras y más desde nuestra tienda</p>
+      <a routerLink="/" class="btn btn-success mt-2 mx-auto" style="width:fit-content">Ver productos</a>
+    </div>
+
+  } @else {
+    <div class="row g-4">
+
+      <!-- Items -->
+      <div class="col-12 col-lg-8">
+        @for (item of cartService.items(); track item.product.id) {
+          <div class="card mb-3">
+            <div class="card-body d-flex align-items-center gap-3 flex-wrap">
+
+              <!-- Imagen -->
+              <div class="text-center" style="min-width:50px">
+                @if (item.product.image?.startsWith('data:')) {
+                  <img [src]="item.product.image" style="width:50px;height:50px;object-fit:cover;border-radius:10px" />
+                } @else {
+                  <span style="font-size:2.5rem">{{ item.product.image }}</span>
+                }
               </div>
-              <div class="item-qty">
-                <label>Cantidad</label>
-                <input type="number" [value]="item.quantity" min="1" [max]="item.product.stock"
-                       (change)="updateQty(item.product.id, $event)" />
+
+              <!-- Info -->
+              <div class="flex-grow-1">
+                <h6 class="mb-0 fw-bold">{{ item.product.name }}</h6>
+                <small class="text-muted">{{ item.product.category }} · {{ item.product.unit }}</small>
               </div>
-              <div class="item-price">
-                <span class="unit-price">${{ item.product.price | number:'1.0-0' }} c/u</span>
-                <span class="total-price">${{ item.product.price * item.quantity | number:'1.0-0' }}</span>
+
+              <!-- Cantidad -->
+              <div class="d-flex align-items-center gap-2">
+                <label class="text-muted small mb-0">Cant:</label>
+                <input type="number" class="form-control form-control-sm text-center" style="width:65px"
+                  [value]="item.quantity" min="1" [max]="item.product.stock"
+                  (change)="updateQty(item.product.id, $event)" />
               </div>
-              <button class="remove-btn" (click)="cartService.remove(item.product.id)">✕</button>
+
+              <!-- Precio -->
+              <div class="text-end" style="min-width:90px">
+                <div class="text-muted small">${{ item.product.price | number:'1.0-0' }} c/u</div>
+                <div class="fw-bold text-success fs-5">${{ item.product.price * item.quantity | number:'1.0-0' }}</div>
+              </div>
+
+              <!-- Eliminar -->
+              <button class="btn btn-sm btn-outline-danger" (click)="cartService.remove(item.product.id)">✕</button>
             </div>
-          }
-        </div>
+          </div>
+        }
+      </div>
 
-        <div class="cart-summary">
-          <h2>Resumen del pedido</h2>
-          <div class="summary-rows">
+      <!-- Resumen -->
+      <div class="col-12 col-lg-4">
+        <div class="card border-success sticky-top" style="top:80px">
+          <div class="card-header bg-success text-white fw-bold">Resumen del pedido</div>
+          <div class="card-body">
             @for (item of cartService.items(); track item.product.id) {
-              <div class="summary-row">
-                <span>{{ item.product.name }} ×{{ item.quantity }}</span>
-                <span>${{ item.product.price * item.quantity | number:'1.0-0' }}</span>
+              <div class="d-flex justify-content-between mb-1">
+                <small class="text-muted">{{ item.product.name }} ×{{ item.quantity }}</small>
+                <small>${{ item.product.price * item.quantity | number:'1.0-0' }}</small>
               </div>
             }
+            <hr />
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <strong>Total</strong>
+              <span class="fs-4 fw-bold text-success">${{ cartService.total() | number:'1.0-0' }}</span>
+            </div>
+
+            <!-- Dirección -->
+            <div class="alert alert-success p-2 mb-3 small">
+              🚚 Se enviará a:<br>
+              <strong>{{ auth.currentUser()?.address || 'Sin dirección registrada' }}</strong>
+            </div>
+
+            <button class="btn btn-success w-100 fw-bold" (click)="checkout()" [disabled]="loading()">
+              {{ loading() ? 'Procesando...' : '💳 Confirmar Pedido' }}
+            </button>
+            <a routerLink="/" class="btn btn-outline-secondary w-100 mt-2">← Seguir comprando</a>
           </div>
-          <div class="summary-divider"></div>
-          <div class="summary-total">
-            <span>Total</span>
-            <span class="total-amount">${{ cartService.total() | number:'1.0-0' }}</span>
-          </div>
-          <button class="checkout-btn" (click)="checkout()">
-             Confirmar Pedido
-          </button>
-          <a routerLink="/" class="keep-shopping">← Seguir comprando</a>
         </div>
       </div>
-    }
-  </div>
+
+    </div>
+  }
 </div>

@@ -1,12 +1,20 @@
+<!-- TOP HEADER BAR -->
+<div class="top-header">
+  <div class="top-header-inner">
+    
+  </div>
+</div>
+
+<!-- MAIN NAVBAR -->
 <nav class="navbar">
   <div class="nav-brand">
-    <a routerLink="/" class="brand-link">
+    <a routerLink="/" class="brand-link" (click)="closeMenu()">
       <span class="brand-icon">🌿</span>
       <span class="brand-name">Jacoyitos</span>
     </a>
   </div>
 
-  <div class="nav-links">
+  <div class="nav-links d-none d-md-flex">
     <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Inicio</a>
     @if (auth.isAdmin()) {
       <a routerLink="/admin" routerLinkActive="active">Panel Admin</a>
@@ -20,15 +28,53 @@
           🛒 <span class="cart-badge">{{ cart.count() }}</span>
         </a>
       }
-      <span class="user-info">
-        <span class="user-role" [class.admin]="auth.isAdmin()">
-          {{ auth.isAdmin() ? '⚙️ Admin' : '👤' }}
-        </span>
-        {{ auth.currentUser()?.name }}
-      </span>
-      <button (click)="logout()" class="logout-btn">Salir</button>
+      @if (auth.isAdmin()) {
+        <a routerLink="/admin" class="alert-btn" (click)="orderService.markAllRead()">
+          🔔
+          @if (orderService.unreadCount() > 0) {
+            <span class="alert-badge">{{ orderService.unreadCount() }}</span>
+          }
+        </a>
+      }
+      <div class="profile-dropdown">
+        <button class="profile-trigger">
+          <span class="avatar">{{ auth.currentUser()?.name?.charAt(0) }}</span>
+          <span class="d-none d-md-inline">{{ auth.currentUser()?.name }}</span>
+          <span class="role-tag" [class.admin]="auth.isAdmin()">
+            {{ auth.isAdmin() ? 'Admin' : 'Cliente' }}
+          </span>
+        </button>
+        <div class="dropdown-menu-custom">
+          @if (!auth.isAdmin()) {
+            <a routerLink="/profile" class="drop-item">👤 Mi Perfil</a>
+          }
+          <button (click)="logout()" class="drop-item drop-logout">🚪 Cerrar Sesión</button>
+        </div>
+      </div>
     } @else {
-      <a routerLink="/login" class="login-btn">Iniciar Sesión</a>
+      <a routerLink="/login" class="login-btn d-none d-md-inline-block">Iniciar Sesión</a>
+      <a routerLink="/register" class="register-btn d-none d-md-inline-block">Registrarse</a>
     }
+
+    <button class="hamburger d-md-none" (click)="toggleMenu()" [class.open]="menuOpen">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+@if (menuOpen) {
+  <div class="mobile-menu d-md-none">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" (click)="closeMenu()">🏠 Inicio</a>
+    @if (auth.isAdmin()) {
+      <a routerLink="/admin" (click)="closeMenu()">⚙️ Panel Admin</a>
+    }
+    @if (auth.isLoggedIn() && !auth.isAdmin()) {
+      <a routerLink="/profile" (click)="closeMenu()">👤 Mi Perfil</a>
+      <a routerLink="/cart" (click)="closeMenu()">🛒 Carrito ({{ cart.count() }})</a>
+    }
+    @if (!auth.isLoggedIn()) {
+      <a routerLink="/login" (click)="closeMenu()">🔑 Iniciar Sesión</a>
+      <a routerLink="/register" (click)="closeMenu()">📝 Registrarse</a>
+    }
+  </div>
+}

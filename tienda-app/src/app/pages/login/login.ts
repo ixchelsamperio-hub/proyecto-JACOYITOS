@@ -19,11 +19,12 @@ export class Login {
   loading = signal(false);
 
   async submit() {
-    if (!this.email || !this.password) { this.error.set('Completa todos los campos'); return; }
+    if (!this.email || !this.password) {
+      this.error.set('Completa todos los campos'); return;
+    }
     this.loading.set(true);
     this.error.set('');
-    await new Promise(r => setTimeout(r, 600));
-    const ok = this.auth.login(this.email, this.password);
+    const ok = await this.auth.login(this.email, this.password);
     this.loading.set(false);
     if (ok) {
       this.router.navigate([this.auth.isAdmin() ? '/admin' : '/']);

@@ -9,7 +9,6 @@ export interface CartItem {
 @Injectable({ providedIn: 'root' })
 export class Cart {
   items = signal<CartItem[]>([]);
-
   total = computed(() => this.items().reduce((sum, i) => sum + i.product.price * i.quantity, 0));
   count = computed(() => this.items().reduce((sum, i) => sum + i.quantity, 0));
 
@@ -24,11 +23,11 @@ export class Cart {
     }
   }
 
-  remove(productId: number): void {
+  remove(productId: string): void {
     this.items.update(list => list.filter(i => i.product.id !== productId));
   }
 
-  updateQty(productId: number, qty: number): void {
+  updateQty(productId: string, qty: number): void {
     if (qty < 1) { this.remove(productId); return; }
     this.items.update(list => list.map(i =>
       i.product.id === productId ? { ...i, quantity: qty } : i

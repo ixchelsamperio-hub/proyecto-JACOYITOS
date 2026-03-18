@@ -20,7 +20,7 @@ export class ProductDetail {
   added = signal(false);
 
   product = computed(() => {
-    const id = +this.route.snapshot.params['id'];
+    const id = this.route.snapshot.params['id'];
     return this.ps.getById(id);
   });
 

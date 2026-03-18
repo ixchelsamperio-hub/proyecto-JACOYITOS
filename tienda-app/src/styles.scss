@@ -1,39 +1,24 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
+* { margin: 0; padding: 0; box-sizing: border-box; }
 body {
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   background: #cce4c0;
   color: #1a2e1a;
   -webkit-font-smoothing: antialiased;
 }
+a { color: inherit; }
+button { font-family: inherit; }
+input, textarea, select { font-family: inherit; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f0f4ed; }
+::-webkit-scrollbar-thumb { background: #b5cca9; border-radius: 3px; }
 
-a {
-  color: inherit;
-}
-
-button {
-  font-family: inherit;
-}
-
-input,
-textarea,
-select {
-  font-family: inherit;
-}
-
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f0f4ed;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #b5cca9;
-  border-radius: 3px;
-}
+// Bootstrap overrides - mantener paleta verde
+.bg-success-subtle { background-color: #e8f5e2 !important; }
+.text-success { color: #2d6a2d !important; }
+.border-success-subtle { border-color: #c8dfc0 !important; }
+.bg-warning-subtle { background-color: #fff8e8 !important; }
+.text-warning { color: #b07d1a !important; }
+.border-warning-subtle { border-color: #f8e4a0 !important; }
+.bg-info-subtle { background-color: #e0f2fe !important; }
+.text-info { color: #0369a1 !important; }
+.border-info-subtle { border-color: #bae6fd !important; }

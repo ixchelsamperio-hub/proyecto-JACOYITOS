@@ -4,12 +4,26 @@
 
     @if (product(); as p) {
       <div class="detail-card">
+
+
         <div class="detail-image">
-          <span class="emoji">{{ p.image }}</span>
-          @if (p.stock <= 5) {
-            <span class="low-stock">¡Últimas {{ p.stock }} unidades!</span>
-          }
-        </div>
+  @if (p.image?.startsWith('data:')) {
+    <img [src]="p.image" class="detail-photo" />
+  } @else {
+    <span class="emoji">{{ p.image }}</span>
+  }
+  @if (p.stock <= 5 && p.stock > 0) {
+    <span class="low-stock">¡Últimas {{ p.stock }} unidades!</span>
+  }
+  @if (p.stock === 0) {
+    <span class="low-stock">Agotado</span>
+  }
+</div>
+
+
+
+
+
         <div class="detail-info">
           <span class="category-tag">{{ p.category }}</span>
           <h1>{{ p.name }}</h1>
@@ -19,7 +33,7 @@
           </div>
           <p class="description">{{ p.description }}</p>
           <div class="stock-info">
-            <span>{{ p.stock }} unidades disponibles</span>
+            <span>📦 {{ p.stock }} unidades disponibles</span>
           </div>
           <div class="price-section">
             <span class="price">${{ p.price | number:'1.0-0' }}</span>
@@ -38,7 +52,7 @@
       </div>
     } @else {
       <div class="not-found">
-        <p>Producto no encontrado</p>
+        <p>😕 Producto no encontrado</p>
         <a routerLink="/">Volver al inicio</a>
       </div>
     }

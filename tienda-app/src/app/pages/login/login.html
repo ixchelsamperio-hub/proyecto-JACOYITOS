@@ -10,33 +10,34 @@
       <p class="demo-title">Cuentas de prueba:</p>
       <div class="demo-list">
         <div class="demo-item admin">
-          <strong>Admin</strong>
+          <strong>⚙️ Admin</strong>
           <span>admin&#64;tienda.com / admin123</span>
         </div>
         <div class="demo-item client">
-          <strong> Cliente</strong>
+          <strong>🛒 Cliente</strong>
           <span>carlos&#64;mail.com / user123</span>
         </div>
       </div>
     </div>
 
-    <div class="form">
-      @if (error()) {
-        <div class="error-msg"> {{ error() }}</div>
-      }
-      <div class="field">
-        <label>Correo electrónico</label>
-        <input type="email" [(ngModel)]="email" placeholder="tu@email.com" (keyup.enter)="submit()" />
-      </div>
-      <div class="field">
-        <label>Contraseña</label>
-        <input type="password" [(ngModel)]="password" placeholder="••••••••" (keyup.enter)="submit()" />
-      </div>
-      <button class="submit-btn" (click)="submit()" [disabled]="loading()">
-        {{ loading() ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
-      </button>
+    @if (error()) {
+      <div class="error-msg">⚠️ {{ error() }}</div>
+    }
+    <div class="field">
+      <label>Correo electrónico</label>
+      <input type="email" [(ngModel)]="email" placeholder="tu@email.com" (keyup.enter)="submit()" />
     </div>
+    <div class="field">
+      <label>Contraseña</label>
+      <input type="password" [(ngModel)]="password" placeholder="••••••••" (keyup.enter)="submit()" />
+    </div>
+    <button class="submit-btn" (click)="submit()" [disabled]="loading()">
+      {{ loading() ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
+    </button>
 
+    <div class="register-link">
+      ¿No tienes cuenta? <a routerLink="/register">Regístrate aquí</a>
+    </div>
     <div class="back-link">
       <a routerLink="/">← Volver a la tienda</a>
     </div>

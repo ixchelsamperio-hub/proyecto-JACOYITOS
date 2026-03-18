@@ -18,7 +18,7 @@ export class Home {
 
   search = signal('');
   selectedCategory = signal('Todas');
-  addedIds = signal<number[]>([]);
+  addedIds = signal<string[]>([]);
 
   categories = computed(() => ['Todas', ...this.productService.getCategories()]);
 
@@ -40,7 +40,7 @@ export class Home {
     setTimeout(() => this.addedIds.update(ids => ids.filter(id => id !== product.id)), 1500);
   }
 
-  isAdded(id: number) { return this.addedIds().includes(id); }
+  isAdded(id: string) { return this.addedIds().includes(id); }
 
   stars(rating: number): string {
     return '★'.repeat(Math.floor(rating)) + (rating % 1 >= 0.5 ? '½' : '');
@@ -48,8 +48,8 @@ export class Home {
 
   categoryIcon(cat: string): string {
     const icons: Record<string, string> = {
-      'Frutas': '', 'Verduras': '', 'Lácteos': '',
-      'Panadería': '', 'Carnes': '', 'Bebidas': '', 'Todas': ''
+      'Frutas': '', 'Verduras': '', 'Lácteos': '', 'Lacteos': '',
+      'Panadería': '', 'Panaderia': '', 'Carnes': '', 'Bebidas': '', 'Todas': ''
     };
     return icons[cat] || '';
   }
