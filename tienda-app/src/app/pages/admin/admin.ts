@@ -11,12 +11,15 @@ import { DecimalPipe, DatePipe } from '@angular/common';
   imports: [FormsModule, RouterLink, DecimalPipe, DatePipe],
   templateUrl: './admin.html',
   styleUrl: './admin.scss',
+
+  
 })
 export class Admin implements OnInit {
   ps = inject(ProductService);
   auth = inject(Auth);
   orderService = inject(OrderService);
   router = inject(Router);
+  sidebarOpen = signal(true);
 
   view = signal<'dashboard' | 'products' | 'form' | 'orders' | 'clients'>('dashboard');
   editingProduct = signal<Product | null>(null);

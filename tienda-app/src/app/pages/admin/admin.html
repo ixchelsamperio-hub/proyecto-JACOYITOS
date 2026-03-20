@@ -1,20 +1,86 @@
 <div class="d-flex min-vh-100">
   <!-- Sidebar -->
-  <div class="sidebar bg-success text-white d-flex flex-column p-3" style="min-width:200px">
-    <div class="fw-bold fs-5 mb-4">🌿 Jacoyitos</div>
-    <nav class="nav flex-column gap-1 flex-grow-1">
-      <button class="btn text-start text-white" [class.btn-light]="view()==='dashboard'" [class.text-success]="view()==='dashboard'" (click)="view.set('dashboard')">📊 Dashboard</button>
-      <button class="btn text-start text-white" [class.btn-light]="view()==='products'||view()==='form'" [class.text-success]="view()==='products'||view()==='form'" (click)="view.set('products')">📦 Inventario</button>
-      <button class="btn text-start text-white position-relative" [class.btn-light]="view()==='orders'" [class.text-success]="view()==='orders'" (click)="goToOrders()">
-        🛒 Pedidos
-        @if (orderService.unreadCount() > 0) {
-          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{ orderService.unreadCount() }}</span>
-        }
-      </button>
-      <button class="btn text-start text-white" [class.btn-light]="view()==='clients'" [class.text-success]="view()==='clients'" (click)="view.set('clients')">👥 Clientes</button>
-    </nav>
-    <a routerLink="/" class="text-white-50 small text-decoration-none mt-3">← Ver Tienda</a>
+
+
+
+
+
+  <!-- Botón flotante para abrir sidebar cuando está cerrado -->
+@if (!sidebarOpen()) {
+  <button class="btn btn-success position-fixed top-50 start-0 translate-middle-y px-2 py-3"
+    style="z-index:999;border-radius:0 8px 8px 0 !important"
+    (click)="sidebarOpen.set(true)">
+    ☰
+  </button>
+}
+
+<!-- Overlay para cerrar sidebar en móvil -->
+@if (sidebarOpen()) {
+  <div class="sidebar-overlay d-md-none" (click)="sidebarOpen.set(false)"></div>
+}
+
+<div class="sidebar bg-success text-white d-flex flex-column p-3"
+  [class.sidebar-closed]="!sidebarOpen()">
+
+  <!-- Header con botón cerrar -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    @if (sidebarOpen()) {
+      <div class="fw-bold fs-5">🌿 Jacoyitos</div>
+    }
+    <button class="btn btn-sm text-white ms-auto" (click)="sidebarOpen.set(!sidebarOpen())">
+      {{ sidebarOpen() ? '✕' : '☰' }}
+    </button>
   </div>
+
+  <nav class="nav flex-column gap-1 flex-grow-1">
+    <button class="btn text-start text-white d-flex align-items-center gap-2"
+      [class.btn-light]="view()==='dashboard'"
+      [class.text-success]="view()==='dashboard'"
+      (click)="view.set('dashboard'); sidebarOpen.set(false)">
+      📊 @if (sidebarOpen()) { <span class="sidebar-text">Dashboard</span> }
+    </button>
+
+    <button class="btn text-start text-white d-flex align-items-center gap-2"
+      [class.btn-light]="view()==='products'||view()==='form'"
+      [class.text-success]="view()==='products'||view()==='form'"
+      (click)="view.set('products'); sidebarOpen.set(false)">
+      📦 @if (sidebarOpen()) { <span class="sidebar-text">Inventario</span> }
+    </button>
+
+    <button class="btn text-start text-white d-flex align-items-center gap-2 position-relative"
+      [class.btn-light]="view()==='orders'"
+      [class.text-success]="view()==='orders'"
+      (click)="goToOrders(); sidebarOpen.set(false)">
+      🛒 @if (sidebarOpen()) { <span class="sidebar-text">Pedidos</span> }
+      @if (orderService.unreadCount() > 0) {
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+          {{ orderService.unreadCount() }}
+        </span>
+      }
+    </button>
+
+    <button class="btn text-start text-white d-flex align-items-center gap-2"
+      [class.btn-light]="view()==='clients'"
+      [class.text-success]="view()==='clients'"
+      (click)="view.set('clients'); sidebarOpen.set(false)">
+      👥 @if (sidebarOpen()) { <span class="sidebar-text">Clientes</span> }
+    </button>
+  </nav>
+
+  @if (sidebarOpen()) {
+    <a routerLink="/" class="text-white-50 small text-decoration-none mt-3">← Ver Tienda</a>
+  }
+
+</div>
+
+
+
+
+
+
+
+
+
 
   <!-- Contenido -->
   <div class="flex-grow-1 p-3 p-md-4 bg-light overflow-auto">

@@ -1,12 +1,49 @@
 .sidebar {
   min-height: 100vh;
-  width: 200px;
-  min-width: 200px;
-  @media (max-width: 768px) {
-    width: 60px;
-    min-width: 60px;
-    .fw-bold, a { display: none; }
-    button { font-size: 1.2rem !important; padding: 0.5rem !important; text-align: center !important; }
+  width: 220px;
+  min-width: 220px;
+  transition: width 0.3s, min-width 0.3s;
+
+  &.sidebar-closed {
+    width: 55px;
+    min-width: 55px;
+
+    button {
+      justify-content: center !important;
+      padding: 0.6rem 0 !important;
+    }
+  }
+
+  // En móvil se oculta completamente
+  @media (max-width: 576px) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 998;
+    width: 220px !important;
+    min-width: 220px !important;
+    transform: translateX(0);
+    transition: transform 0.3s;
+
+    &.sidebar-closed {
+      transform: translateX(-100%);
+      width: 220px !important;
+      min-width: 220px !important;
+    }
   }
 }
+
+// Overlay oscuro detrás del sidebar en móvil
+.sidebar-overlay {
+  display: none;
+
+  @media (max-width: 576px) {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 997;
+  }
+}
+
 .border-dashed { border-style: dashed !important; }
