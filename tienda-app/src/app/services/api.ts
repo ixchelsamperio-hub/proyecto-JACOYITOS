@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
-  private base = 'http://localhost:5000/api';
+  private base = 'https://jacoyitos-backend.onrender.com/api';
 
   constructor(private http: HttpClient) {}
 

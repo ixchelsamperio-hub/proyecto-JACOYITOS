@@ -6,7 +6,7 @@ from database import bcrypt
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:4200"])
+CORS(app, origins=["*"])
 bcrypt.init_app(app)
 
 from routes.auth     import auth_bp
